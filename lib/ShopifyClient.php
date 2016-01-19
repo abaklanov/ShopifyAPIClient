@@ -201,22 +201,37 @@ class ShopifyClient
      * @return boolean
      */
     public function validateSignature($query) {
-        if (!is_array($query) || empty($query['hmac']) || !is_string($query['hmac']))
+        /*
+         * Both ordinary and app proxy requests must contain signature
+         */
+        if (!is_array($query) || empty($query['signature']) || !is_string($query['signature'])) {
             return false;
+        }
 
-        $hmac = $query['hmac'];
+        $signatureToCheck = $query['signature'];
+        unset($query['signature']);
+        // Looks like it's app proxy request
+        $appProxy = TRUE;
+        
+        // hmac exists only in normal requests. And calculated signature should be compared to it
+        if (!empty($query['hmac'])) {
+            $signatureToCheck = $query['hmac'];
+            unset($query['hmac']);
+            // No, it's not an app proxy request
+            $appProxy = FALSE;
+        }
+        
         $map = array();
-        unset($query['hmac']);
-
-        if (!empty($query['signature']) && is_string($query['signature']))
-            unset($query['signature']);
 
         ksort($query);
-        foreach ($query as $key => $value)
+        foreach ($query as $key => $value) {
             $map[] = $key . '=' . $value;
+        }
 
-        $signature = hash_hmac('sha256', implode('&', $map), $this->secret);
-        return $hmac === $signature;
+        $string = ($appProxy) ? implode('', $map) : implode('&', $map);
+        
+        $calculatedSignature = hash_hmac('sha256', $string, $this->secret);
+        return $signatureToCheck === $calculatedSignature;
     }
 
     protected function curlHttpApiRequest($method, $url, $query = '', $payload = '', $request_headers = array()) {
