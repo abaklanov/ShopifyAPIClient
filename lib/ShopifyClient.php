@@ -201,10 +201,7 @@ class ShopifyClient
      * @return boolean
      */
     public function validateSignature($query) {
-        /*
-         * Both ordinary and app proxy requests must contain signature
-         */
-        if (!is_array($query) || empty($query['signature']) || !is_string($query['signature'])) {
+        if (!is_array($query)) {
             return false;
         }
 
