@@ -277,7 +277,7 @@ class ShopifyClient
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         curl_setopt($ch, CURLOPT_USERAGENT, 'ohShopify-php-api-client');
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 120);
 
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
         if (!empty($request_headers))
