@@ -205,8 +205,10 @@ class ShopifyClient
             return false;
         }
 
-        $signatureToCheck = $query['signature'];
-        unset($query['signature']);
+        if (isset($query['signature'])) {
+            $signatureToCheck = $query['signature'];
+            unset($query['signature']);
+        }
         // Looks like it's app proxy request
         $appProxy = TRUE;
         
