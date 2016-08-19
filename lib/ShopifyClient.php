@@ -309,7 +309,11 @@ class ShopifyClient
         if ($this->last_response_headers == null) {
             throw new Exception('Cannot be called before an API call.');
         }
-        $params = explode('/', $this->last_response_headers['http_x_shopify_shop_api_call_limit']);
+        if (isset($this->last_response_headers['http_x_shopify_shop_api_call_limit'])) {
+            $params = explode('/', $this->last_response_headers['http_x_shopify_shop_api_call_limit']);
+        } else {
+            $params = [0, 40];
+        }
         return (int)$params[$index];
     }
 
