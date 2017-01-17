@@ -50,7 +50,7 @@ class ShopifyClient
         if ($redirect_url)
             $data['redirect_uri'] = $redirect_url;
 
-        return sprintf('http://%s/admin/oauth/authorize?%s', $this->shop_domain, http_build_query($data));
+        return sprintf('https://%s/admin/oauth/authorize?%s', $this->shop_domain, http_build_query($data));
     }
 
     /**
