@@ -205,8 +205,6 @@ class ShopifyClient
             return false;
         }
 
-        unset($query['page']);
-        
         if (isset($query['signature'])) {
             $signatureToCheck = $query['signature'];
             unset($query['signature']);
