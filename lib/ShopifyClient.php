@@ -224,7 +224,7 @@ class ShopifyClient
 
         ksort($query);
         foreach ($query as $key => $value) {
-            $map[] = $key . '=' . $value;
+            $map[] = $key . '=' . (is_array($value) ? $this->parseArray($value) : $value);
         }
 
         $string = ($appProxy) ? implode('', $map) : implode('&', $map);
@@ -316,6 +316,20 @@ class ShopifyClient
             $params = [0, 40];
         }
         return (int)$params[$index];
+    }
+
+    /**
+     * When url contains array params it should be parsed according to this article
+     * https://community.shopify.com/c/Shopify-APIs-SDKs/HMAC-calculation-vs-ids-arrays/m-p/261154
+     *
+     * @param array $value
+     * @return string
+     */
+    protected function parseArray($value)
+    {
+        $string = implode('", "', $value);
+
+        return '["' . $string . '"]';
     }
 
 }
